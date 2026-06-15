@@ -1,0 +1,55 @@
+initialize() {
+    initializeSLiMModelType("WF");
+    initializeTreeSeq();
+    initializeMutationRate(MU);  
+    initializeMutationType("m1", 0.5, "f", 0.0);
+    initializeGenomicElementType("g1", m1, 1.0);
+    defineConstant("L", 1e6);
+    initializeGenomicElement(g1, 0, L - 1);
+    initializeRecombinationRate(1e-8);
+}
+
+1 late() {
+    if (!exists("INIT_TREES"))
+        stop("ERROR: please pass INIT_TREES");
+
+    sim.readFromPopulationFile(INIT_TREES);
+
+    defineConstant("GEN_START", sim.cycle + 1);
+    defineConstant("GEN_END", GEN_START + NUM_GEN - 1);
+                      
+    if (REP == 1)
+        writeFile(OUTFILE, "rep,gen,N,pi,Ne_est", append=F);
+        
+    catn("Replicate " + REP + " | N: " + START_N + " -> " + END_N + " | Mu: " + MU);
+}
+
+// Instantaneous population decline
+GEN_START early() {
+    sim.subpopulations[0].setSubpopulationSize(END_N);
+}
+
+// Record diversity
+GEN_START:GEN_END late() {
+    if ((sim.cycle - GEN_START) % SAMPLE_INTERVAL == 0) {
+        p = sim.subpopulations[0];
+        
+        if (p.individualCount < 2) return;
+
+        inds = sample(p.individuals, min(50, p.individualCount));
+        haplos = inds.haplosomes;
+        
+        // Calculate heterozygosity
+        pi = calcHeterozygosity(haplos);
+        
+        // Estimate Ne
+        Ne_est = pi / (4.0 * (2.5e-7)); 
+
+        line = paste(c(REP, sim.cycle, p.individualCount, pi, asInteger(Ne_est)), sep=",");
+        writeFile(OUTFILE, line, append=T);
+    }
+}
+
+GEN_END late() {
+    sim.simulationFinished();
+}
