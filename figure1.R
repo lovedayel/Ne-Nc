@@ -17,13 +17,11 @@ data$species <- rownames(data)
 
 #filter and log transform data
 filtered_data <- data %>%
-  filter(!is.na(Ne), !is.na(Ne_lower), !is.na(Ne_upper), !is.na(Nc_estimate)) %>%
   mutate(
     log_Ne = log10(Ne),
     log_Nc = log10(Nc_estimate),
     log_Ne_Nc_ratio = log10(Ne / Nc_estimate)
-  ) %>%
-  select(-Nc_lower, -Nc_upper, -Nc_source)
+  ) 
 
 #filter data to only include species in the tree
 filtered_data <- filtered_data[filtered_data$species %in% resolved_tree$tip.label, ]
