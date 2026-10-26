@@ -1,5 +1,5 @@
 ## Ne-Nc
-# This repository contains the data and code required to recreate the figures and analysis in the manuscript: _Estimates of long-term effective population size reveal the rapid decline of endangered species_ 
+__This repository contains the data and code required to recreate the figures and analysis in the manuscript: _Estimates of long-term effective population size reveal the rapid decline of endangered species___
 
 - __figure1.R__: R code to produce main Figure 1; requires Nc_final.csv and phylo_final.nwk from the clean_data directory
 - __figure2.R__: R code to produce main Figure 2; based on the analytical appendix found in the Supplementary Materials
