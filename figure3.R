@@ -273,7 +273,7 @@ comparison_df <- all_species_pred %>%
     method2_fold = 10^(predicted_log10_Nc_method2 - log10_Nc_estimate)
   )
 
-#Figure 4: histogram of Nc declines (METHOD 1) ---
+#Figure 4: histogram of Nc declines (METHOD 1) 
 pdf("predicting_Nc_figs/Figure_4_histogram_Nc_decline_method1.pdf", width = 7, height = 6)
 hist_method1 <- ggplot(comparison_df, aes(x = log10(method1_fold), fill = IUCN_status)) +
   geom_histogram(binwidth = 0.5, color = "black", alpha = 0.9) +
